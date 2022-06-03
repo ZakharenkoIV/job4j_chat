@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,13 +30,19 @@ public class Person {
     @JoinTable(name = "role_to_person",
             joinColumns = {@JoinColumn(name = "person_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @JsonIgnore
     @Transient
-    private Set<Message> unreadMessages;
+    private Set<Message> unreadMessages = new HashSet<>();
 
     public Person() {
+    }
+
+    public static Person of(long personId) {
+        Person person = new Person();
+        person.setId(personId);
+        return person;
     }
 
     public Long getId() {

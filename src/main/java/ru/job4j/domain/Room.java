@@ -19,12 +19,6 @@ public class Room {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany
-    @JoinTable(name = "room_to_person",
-            joinColumns = {@JoinColumn(name = "room_id")},
-            inverseJoinColumns = {@JoinColumn(name = "person_id")})
-    private Set<Person> persons = new HashSet<>();
-
     @OneToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "message_to_room",
             joinColumns = {@JoinColumn(name = "room_id")},
@@ -50,14 +44,6 @@ public class Room {
         this.name = name;
     }
 
-    public Set<Person> getPersons() {
-        return persons;
-    }
-
-    public void setPersons(Set<Person> persons) {
-        this.persons = persons;
-    }
-
     public Set<Message> getMessages() {
         return messages;
     }
@@ -77,13 +63,12 @@ public class Room {
         Room room = (Room) o;
         return Objects.equals(id, room.id)
                 && Objects.equals(name, room.name)
-                && Objects.equals(persons, room.persons)
                 && Objects.equals(messages, room.messages);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, persons, messages);
+        return Objects.hash(id, name, messages);
     }
 
     public void addMessage(Message newMessage) {

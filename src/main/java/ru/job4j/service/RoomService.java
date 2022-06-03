@@ -3,14 +3,13 @@ package ru.job4j.service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.job4j.domain.Message;
-import ru.job4j.domain.Person;
 import ru.job4j.domain.Room;
 import ru.job4j.repository.RoomRepository;
 
 import javax.transaction.Transactional;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -43,21 +42,12 @@ public class RoomService {
         rooms.deleteById(roomId);
     }
 
-    public Set<Message> findUnreadMessages(final long roomId, final long personId) {
-        Optional<Room> room = activeRooms.stream()
-                .filter(r -> r.getId().equals(roomId)).findFirst();
-        if (room.isPresent()) {
-            Optional<Person> person = room.get().getPersons().stream()
-                    .filter(p -> p.getId().equals(personId)).findFirst();
-            if (person.isPresent()
-                    && person.get().getUnreadMessages() != null
-                    && person.get().getUnreadMessages().size() != 0) {
-                Set<Message> unreadMessages = person.get().getUnreadMessages();
-                person.get().setUnreadMessages(new HashSet<>());
-                return unreadMessages;
-            }
-        }
-        return new HashSet<>();
+    public Set<Message> getAllRoomMessages(final long roomId) {
+        return activeRooms.stream()
+                .filter(r -> r.getId().equals(roomId))
+                .findFirst()
+                .map(Room::getMessages)
+                .orElse(new HashSet<>());
     }
 
     public void saveMessage(final Message newMessage, final long roomId) {
@@ -67,10 +57,17 @@ public class RoomService {
         activeRooms.stream()
                 .filter(r -> r.getId().equals(roomId))
                 .findFirst()
-                .ifPresent(room -> {
-                    room.addMessage(savedMessage);
-                    room.getPersons().forEach(person -> person.addUnreadMessage(savedMessage));
-                    rooms.save(room);
-                });
+                .ifPresent(room -> room.addMessage(savedMessage));
     }
+
+    public Set<Room> getActiveRooms() {
+        return this.activeRooms.stream()
+                .map(room -> {
+                    Room roomDTO = new Room();
+                    roomDTO.setId(room.getId());
+                    roomDTO.setName(room.getName());
+                    return roomDTO;
+                }).collect(Collectors.toSet());
+    }
+
 }

@@ -11,6 +11,7 @@
     <groupId>ru.job4j</groupId>
     <artifactId>job4j_chat</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>job4j_chat</name>
     <description>Demo project chat for Spring Boot</description>
     <properties>
@@ -22,6 +23,12 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.200</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.6.2</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->

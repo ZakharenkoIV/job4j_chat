@@ -1,6 +1,5 @@
 package ru.job4j.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
 
 import javax.persistence.*;
@@ -16,12 +15,6 @@ public class Message {
 
     @NotNull
     private String content;
-
-    @NotNull
-    @JsonIgnoreProperties({"roles", "unreadMessages", "password"})
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    private Person author;
 
     public Message() {
     }
@@ -42,14 +35,6 @@ public class Message {
         this.content = content;
     }
 
-    public Person getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Person author) {
-        this.author = author;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -60,12 +45,11 @@ public class Message {
         }
         Message message = (Message) o;
         return Objects.equals(id, message.id)
-                && Objects.equals(content, message.content)
-                && Objects.equals(author, message.author);
+                && Objects.equals(content, message.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, author);
+        return Objects.hash(id, content);
     }
 }

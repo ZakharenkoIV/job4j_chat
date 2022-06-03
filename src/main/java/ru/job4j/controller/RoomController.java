@@ -19,7 +19,15 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    @PostMapping("/room/")
+    @GetMapping("/rooms/")
+    public ResponseEntity<Set<Room>> findActiveRooms() {
+        return new ResponseEntity<>(
+                this.roomService.getActiveRooms(),
+                HttpStatus.OK
+        );
+    }
+
+    @PostMapping(value = "/rooms/", produces = "application/json")
     public ResponseEntity<Room> createRoom(@RequestBody Room room) {
         return new ResponseEntity<>(
                 this.roomService.createRoom(room),
@@ -27,25 +35,25 @@ public class RoomController {
         );
     }
 
-    @DeleteMapping("/room/{roomId}")
-    public ResponseEntity<Void> deleteRoom(@PathVariable long roomId) {
-        this.roomService.deleteRoom(roomId);
-        return ResponseEntity.ok().build();
+    @GetMapping("/rooms/{roomId}")
+    public ResponseEntity<Set<Message>> findAllRoomMessages(
+            @PathVariable long roomId) {
+        return new ResponseEntity<>(
+                this.roomService.getAllRoomMessages(roomId),
+                HttpStatus.OK
+        );
     }
 
-    @PostMapping("/room/{roomId}")
+    @PostMapping("/rooms/{roomId}")
     public ResponseEntity<Void> saveMessage(@RequestBody Message message,
                                             @PathVariable long roomId) {
         this.roomService.saveMessage(message, roomId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/room/{roomId}?id={personId}")
-    public ResponseEntity<Set<Message>> findUnreadMessages(
-            @PathVariable long roomId, @PathVariable long personId) {
-        return new ResponseEntity<>(
-                this.roomService.findUnreadMessages(roomId, personId),
-                HttpStatus.OK
-        );
+    @DeleteMapping("/rooms/{roomId}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable long roomId) {
+        this.roomService.deleteRoom(roomId);
+        return ResponseEntity.ok().build();
     }
 }
