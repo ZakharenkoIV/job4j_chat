@@ -106,16 +106,13 @@ public class Person {
             return false;
         }
         Person person = (Person) o;
-        return Objects.equals(id, person.id)
-                && Objects.equals(name, person.name)
+        return Objects.equals(name, person.name)
                 && Objects.equals(email, person.email)
-                && Objects.equals(password, person.password)
-                && Objects.equals(roles, person.roles)
-                && Objects.equals(unreadMessages, person.unreadMessages);
+                && Objects.equals(password, person.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, roles, unreadMessages);
+        return Objects.hash(name, email, password);
     }
 }

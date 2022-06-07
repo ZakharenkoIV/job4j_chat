@@ -5,4 +5,5 @@ import ru.job4j.domain.Person;
 
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
+    Person findByName(String name);
 }

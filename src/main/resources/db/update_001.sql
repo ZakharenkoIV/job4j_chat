@@ -20,7 +20,7 @@ create table persons
 );
 
 insert into persons (name, email, password)
-values ('pete', '123@gmail.ru', '0');
+values ('pete', '123@gmail.ru', '$2a$10$a5AUrt19/5JJXGHdRrgeFOxgj.fvpHCwkuzG540RoXuyi28F4QOvS');
 insert into persons (name, email, password)
 values ('ban', 'qwerty@gmail.ru', '0');
 insert into persons (name, email, password)
