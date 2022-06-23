@@ -21,6 +21,9 @@ public class MessageController {
 
     @PostMapping("/")
     public ResponseEntity<Message> saveMessage(@RequestBody Message message) {
+        if (message.getContent() == null) {
+            throw new NullPointerException("Сообщение не может быть пустым");
+        }
         return new ResponseEntity<>(
                 this.messageService.saveMessage(message),
                 HttpStatus.OK

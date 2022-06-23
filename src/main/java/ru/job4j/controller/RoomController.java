@@ -29,6 +29,9 @@ public class RoomController {
 
     @PostMapping(value = "/rooms/", produces = "application/json")
     public ResponseEntity<Room> createRoom(@RequestBody Room room) {
+        if (room.getName() == null) {
+            throw new NullPointerException("Имя комнаты не может быть пустым");
+        }
         return new ResponseEntity<>(
                 this.roomService.createRoom(room),
                 HttpStatus.CREATED
@@ -47,6 +50,9 @@ public class RoomController {
     @PostMapping("/rooms/{roomId}")
     public ResponseEntity<Void> saveMessage(@RequestBody Message message,
                                             @PathVariable long roomId) {
+        if (message.getContent() == null) {
+            throw new NullPointerException("Сообщение не может быть пустым");
+        }
         this.roomService.saveMessage(message, roomId);
         return ResponseEntity.ok().build();
     }

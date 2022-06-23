@@ -1,13 +1,14 @@
 package ru.job4j.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Message;
 import ru.job4j.domain.Room;
 import ru.job4j.repository.RoomRepository;
 
 import javax.transaction.Transactional;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,9 @@ public class RoomService {
                 .filter(r -> r.getId().equals(roomId))
                 .findFirst()
                 .map(Room::getMessages)
-                .orElse(new HashSet<>());
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Account is not found. Please, check requisites."));
     }
 
     public void saveMessage(final Message newMessage, final long roomId) {
