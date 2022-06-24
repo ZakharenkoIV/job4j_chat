@@ -1,7 +1,9 @@
 package ru.job4j.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Person;
 import ru.job4j.repository.PersonRepository;
 
@@ -33,5 +35,11 @@ public class PersonService {
         return StreamSupport
                 .stream(persons.findAll().spliterator(), true)
                 .collect(Collectors.toList());
+    }
+
+    public Person getById(Long id) {
+        return persons.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Пользователя с таким ID не найдено"));
     }
 }

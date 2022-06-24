@@ -3,10 +3,15 @@ package ru.job4j.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.job4j.domain.Message;
 import ru.job4j.domain.Room;
 import ru.job4j.service.RoomService;
 
+import java.beans.Statement;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Set;
 
 @RestController
@@ -61,5 +66,23 @@ public class RoomController {
     public ResponseEntity<Void> deleteRoom(@PathVariable long roomId) {
         this.roomService.deleteRoom(roomId);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{roomId}")
+    public void patchRoom(@RequestBody HashMap<String, String> body,
+                          @PathVariable long roomId) throws Exception {
+        var person = roomService.getById(roomId);
+        for (String name : body.keySet()) {
+            if (Arrays.stream(person.getClass().getDeclaredFields())
+                    .map(Field::getName)
+                    .noneMatch(p -> p.substring(p.lastIndexOf(".") + 1).equals(name))) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Ключ \"" + name + "\" не найден");
+            }
+            new Statement(person,
+                    "set" + name.substring(0, 1).toUpperCase() + name.substring(1),
+                    new String[]{body.get(name)}).execute();
+        }
+        roomService.save(person);
     }
 }

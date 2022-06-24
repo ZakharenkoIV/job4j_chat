@@ -73,4 +73,13 @@ public class RoomService {
                 }).collect(Collectors.toSet());
     }
 
+    public Room getById(Long roomId) {
+        return rooms.findById(roomId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Комната не найдена"));
+    }
+
+    public Room save(Room room) {
+        return rooms.save(room);
+    }
 }
