@@ -7,11 +7,12 @@ import ru.job4j.domain.Message;
 import ru.job4j.domain.Room;
 import ru.job4j.service.RoomService;
 
+import java.util.HashMap;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/chat")
-public class RoomController {
+public class RoomController implements BaseController {
 
     private final RoomService roomService;
 
@@ -61,5 +62,13 @@ public class RoomController {
     public ResponseEntity<Void> deleteRoom(@PathVariable long roomId) {
         this.roomService.deleteRoom(roomId);
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{roomId}")
+    public void patchRoom(@RequestBody HashMap<String, String> body,
+                          @PathVariable long roomId) throws Exception {
+        var room = roomService.getById(roomId);
+        transferData(body, room);
+        roomService.save(room);
     }
 }

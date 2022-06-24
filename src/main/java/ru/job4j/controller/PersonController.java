@@ -17,7 +17,7 @@ import java.util.StringJoiner;
 
 @RestController
 @RequestMapping("/persons")
-public class PersonController {
+public class PersonController implements BaseController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(
             PersonController.class.getSimpleName());
@@ -30,19 +30,27 @@ public class PersonController {
         this.objectMapper = objectMapper;
     }
 
+    @GetMapping("/all")
+    public List<Person> getAll() {
+        return personService.findAll();
+    }
+
     @PostMapping("/sign-up")
     public void signUp(@RequestBody Person person) {
         if (isNullState(person)) {
             throw new NullPointerException(
                     "Поле ".concat(getNamesNullFields(person))
-                    .concat(" не может быть пустым"));
+                            .concat(" не может быть пустым"));
         }
         personService.save(person);
     }
 
-    @GetMapping("/all")
-    public List<Person> getAll() {
-        return personService.findAll();
+    @PatchMapping("/{personId}")
+    public void patchPerson(@RequestBody HashMap<String, String> body,
+                            @PathVariable long personId) throws Exception {
+        var person = personService.getById(personId);
+        transferData(body, person);
+        personService.save(person);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
