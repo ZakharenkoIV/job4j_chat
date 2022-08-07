@@ -10,10 +10,10 @@ import ru.job4j.domain.Person;
 import ru.job4j.service.PersonService;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.StringJoiner;
 
 @RestController
 @RequestMapping("/persons")
@@ -36,12 +36,7 @@ public class PersonController implements BaseController {
     }
 
     @PostMapping("/sign-up")
-    public void signUp(@RequestBody Person person) {
-        if (isNullState(person)) {
-            throw new NullPointerException(
-                    "Поле ".concat(getNamesNullFields(person))
-                            .concat(" не может быть пустым"));
-        }
+    public void signUp(@Valid @RequestBody Person person) {
         personService.save(person);
     }
 
@@ -64,25 +59,5 @@ public class PersonController implements BaseController {
             }
         }));
         LOGGER.error(e.getLocalizedMessage());
-    }
-
-    private boolean isNullState(Person person) {
-        return person.getName() == null
-                || person.getEmail() == null
-                || person.getPassword() == null;
-    }
-
-    private String getNamesNullFields(Person person) {
-        StringJoiner massage = new StringJoiner(", ");
-        if (person.getName() == null) {
-            massage.add("имя");
-        }
-        if (person.getEmail() == null) {
-            massage.add("email");
-        }
-        if (person.getPassword() == null) {
-            massage.add("пароль");
-        }
-        return massage.toString();
     }
 }

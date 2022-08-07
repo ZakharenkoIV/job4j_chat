@@ -1,8 +1,7 @@
 package ru.job4j.domain;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,7 +14,7 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Name must be not empty")
     @Column(unique = true)
     private String name;
 

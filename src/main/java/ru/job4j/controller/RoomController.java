@@ -7,6 +7,7 @@ import ru.job4j.domain.Message;
 import ru.job4j.domain.Room;
 import ru.job4j.service.RoomService;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -29,10 +30,7 @@ public class RoomController implements BaseController {
     }
 
     @PostMapping(value = "/rooms/", produces = "application/json")
-    public ResponseEntity<Room> createRoom(@RequestBody Room room) {
-        if (room.getName() == null) {
-            throw new NullPointerException("Имя комнаты не может быть пустым");
-        }
+    public ResponseEntity<Room> createRoom(@Valid @RequestBody Room room) {
         return new ResponseEntity<>(
                 this.roomService.createRoom(room),
                 HttpStatus.CREATED
@@ -49,11 +47,8 @@ public class RoomController implements BaseController {
     }
 
     @PostMapping("/rooms/{roomId}")
-    public ResponseEntity<Void> saveMessage(@RequestBody Message message,
+    public ResponseEntity<Void> saveMessage(@Valid @RequestBody Message message,
                                             @PathVariable long roomId) {
-        if (message.getContent() == null) {
-            throw new NullPointerException("Сообщение не может быть пустым");
-        }
         this.roomService.saveMessage(message, roomId);
         return ResponseEntity.ok().build();
     }

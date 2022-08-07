@@ -1,9 +1,9 @@
 package ru.job4j.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,14 +16,14 @@ public class Person {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Name must be not empty")
     private String name;
 
-    @NotNull
+    @NotBlank(message = "Email must be not empty")
     @Column(unique = true)
     private String email;
 
-    @NotNull
+    @NotBlank(message = "Password must be not empty")
     private String password;
 
     @ManyToMany

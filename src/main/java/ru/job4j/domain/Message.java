@@ -1,8 +1,7 @@
 package ru.job4j.domain;
 
-import com.sun.istack.NotNull;
-
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Entity
@@ -13,7 +12,7 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Content must be not empty")
     private String content;
 
     public Message() {

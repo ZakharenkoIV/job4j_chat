@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.domain.Message;
 import ru.job4j.service.MessageService;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 
 @RestController
@@ -19,10 +20,7 @@ public class MessageController implements BaseController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Message> saveMessage(@RequestBody Message message) {
-        if (message.getContent() == null) {
-            throw new NullPointerException("Сообщение не может быть пустым");
-        }
+    public ResponseEntity<Message> saveMessage(@Valid @RequestBody Message message) {
         return new ResponseEntity<>(
                 this.messageService.save(message),
                 HttpStatus.OK
